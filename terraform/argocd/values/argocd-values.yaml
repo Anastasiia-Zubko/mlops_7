@@ -1,0 +1,88 @@
+# ArgoCD Helm Chart Values
+# Repository: https://github.com/argoproj/argo-helm
+
+# Global settings
+global:
+  domain: argocd.example.com
+
+# ArgoCD Server Configuration
+server:
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: false
+  # Extra command line arguments for ArgoCD server
+  extraArgs:
+    - --insecure
+
+# ArgoCD Repo Server Configuration
+repoServer:
+  service:
+    type: ClusterIP
+    port: 8081
+
+# ArgoCD Controller Configuration
+controller:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+# ArgoCD Server Resources
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# RBAC Configuration
+rbac:
+  create: true
+  policyRules:
+    - apiGroups:
+        - '*'
+      resources:
+        - '*'
+      verbs:
+        - '*'
+
+# Service Account
+serviceAccount:
+  create: true
+  name: argocd-admin
+
+# Application Controller
+applicationController:
+  replicas: 1
+
+# ArgoCD Dex (OIDC Provider)
+dex:
+  enabled: false
+
+# Redis configuration
+redis:
+  enabled: true
+
+# Notifications
+notifications:
+  enabled: false
+
+# ArgoCD Metrics
+metrics:
+  enabled: false
+
+# Default timeout for syncing applications (in seconds)
+controller:
+  operationRetryStrategy:
+    backoff:
+      duration: 5s
+      factor: 2
+      maxDuration: 2m
+    maxAttempts: 5
